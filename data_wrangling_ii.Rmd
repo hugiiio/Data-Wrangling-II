@@ -53,5 +53,39 @@ drug_use_html %>%
 ```
 ^A total of 15 tables are extratced.
 we are going to fcus on the first tabel (first(), nth(), last());
-slice used to access specifc data lines, (-1) removed first line
+slice used to access specifc data lines, (-1) removed first line, as_tibble turns dataframe int a tibble
+
+
+##star wars 
+want data from here: 
+
+```{r}
+
+swm_html = 
+  read_html("https://www.imdb.com/list/ls070150896/")
+```
+Now we only grab elements we want, but for this page we dont know what css tag IMDB uses for movie info pages. This is where selector gagets comes in 
+```{r}
+title_vec <- 
+  swm_html %>% 
+  html_nodes(css = ".lister-item-header a") %>% 
+  html_text()
+
+
+gross_rev_vec <- 
+   swm_html %>% 
+  html_nodes(css = ".text-muted .ghost~ .text-muted+ span") %>% 
+  html_text()
+
+run_time_vec <- 
+  swm_html %>% 
+  html_nodes(css = ".runtime") %>% 
+  html_text()
+
+swm_df <- 
+  tibble(
+    tittle  = title_vec,
+    gross_rev = gross_rev_vec,
+    runtime = run_time_vec)
+```
 
