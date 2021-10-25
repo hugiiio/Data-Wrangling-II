@@ -8,6 +8,8 @@ library(tidyverse)
 library(viridis)
 library(ggridges)
 library(patchwork)
+library(httr)
+library(rvest)
 
 knitr::opts_chunk$set(
   fig.width = 6,
@@ -25,4 +27,31 @@ options(
 scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
+New packages: httr and rvest, have to load seperately, part of tidy verse ecosystem tho
+
+
+##scrapping table
+Want the first tabel from [this page]: http://samhda.s3-us-gov-west-1.amazonaws.com/s3fs-public/field-uploads/2k15StateFiles/NSDUHsaeShortTermCHG2015.html
+
+reading the html
+```{r}
+url = "http://samhda.s3-us-gov-west-1.amazonaws.com/s3fs-public/field-uploads/2k15StateFiles/NSDUHsaeShortTermCHG2015.htm"
+
+
+drug_use_html <- read_html(url)
+```
+Etratcing the tables: selector gadgets;
+```{r}
+tabl_marj <- 
+drug_use_html %>% 
+  html_nodes(css = "table") %>% 
+  first() %>% 
+  html_table() %>% 
+  slice(-1) %>% 
+  as_tibble()
+  
+```
+^A total of 15 tables are extratced.
+we are going to fcus on the first tabel (first(), nth(), last());
+slice used to access specifc data lines, (-1) removed first line
 
